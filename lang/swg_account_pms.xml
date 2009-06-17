@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<swg_lang_file_v1>
+
+<account><pms>
+ <box>
+  <in>
+   <input input="string" />
+   <list><empty><input input="string" /></empty></list>
+  </in>
+
+  <input input="string" />
+
+  <out>
+   <input input="string" />
+   <list><empty><input input="string" /></empty></list>
+  </out>
+
+  <statistics><input input="string" /></statistics>
+ </box>
+
+ <delete><input input="string" /></delete>
+
+ <done>
+  <delete><input input="string" /></delete>
+  <new><input input="string" /></new>
+ </done>
+
+ <email><only><input input="string" /></only></email>
+ <from><input input="string" /></from>
+
+ <helper><to>
+  <digitstart__1><input input="string" /></digitstart__1>
+  <digitstart__2><input input="string" /></digitstart__2>
+ </to></helper>
+
+ <message>
+  <input input="string" />
+  <via><email><input input="string" /></email></via>
+ </message>
+
+ <new>
+  <input input="string" />
+  <saveout><input input="string" /></saveout>
+ </new>
+
+ <quota><input input="string" /></quota>
+ <reply><input input="string" /></reply>
+
+ <sender>
+  <id><input input="string" /></id>
+  <name><input input="string" /></name>
+ </sender>
+
+ <sent>
+  <mailbox>
+   <error><input input="string" /></error>
+   <full><input input="string" /></full>
+  </mailbox>
+
+  <recipient><error><input input="string" /></error></recipient>
+  <successfully><input input="string" /></successfully>
+ </sent>
+
+ <setting><input input="string" /></setting>
+ <system><message><input input="string" /></message></system>
+ <time><input input="string" /></time>
+
+ <title>
+  <input input="string" />
+  <message><via><email><input input="string" /></email></via></message>
+ </title>
+
+ <to><input input="string" /></to>
+ <unread><input input="string" /></unread>
+ <via><email><input input="string" /></email></via>
+</pms></account>
+
+<errors><account><pms>
+ <bid><invalid><input input="string" /></invalid></bid>
+ <mid><invalid><input input="string" /></invalid></mid>
+ <outbox><full><input input="string" /></full></outbox>
+ <recipient><invalid><input input="string" /></invalid></recipient>
+ <send><all><failed><input input="string" /></failed></all></send>
+</pms></account></errors>
+
+</swg_lang_file_v1>
