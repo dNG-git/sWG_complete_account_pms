@@ -28,7 +28,6 @@ this program; if not, write to the Free Software Foundation, Inc.,
 ----------------------------------------------------------------------------
 http://www.direct-netware.de/redirect.php?licenses;gpl
 ----------------------------------------------------------------------------
-$Id: swg_account_pms_message.php,v 1.9 2009/05/05 13:57:34 s4u Exp $
 #echo(sWGaccountPmsVersion)#
 sWG/#echo(__FILEPATH__)#
 ----------------------------------------------------------------------------
