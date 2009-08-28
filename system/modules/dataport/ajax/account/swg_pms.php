@@ -99,26 +99,21 @@ case "status_and_pms":
 			$g_box_in_object = NULL;
 			$g_datalinker_object = new direct_datalinker_uhome ();
 
-			if ($g_datalinker_object)
+			if (($g_datalinker_object)&&($g_datalinker_object->get ($direct_settings['user']['id'])))
 			{
-				if ($g_datalinker_object->get ($direct_settings['user']['id']))
-				{
-					$g_boxes_array = $g_datalinker_object->get_subs ("direct_account_pms_box","u-".$direct_settings['user']['id'],NULL,"c0a38f7c90c17551fb03dbd2d80f0aba",1,0,0,"position-asc");
-					// md5 ("account_pms")
+				$g_boxes_array = $g_datalinker_object->get_subs ("direct_account_pms_box","u-".$direct_settings['user']['id'],NULL,"c0a38f7c90c17551fb03dbd2d80f0aba",1,0,0,"position-asc");
+				// md5 ("account_pms")
 
-					if ($g_boxes_array)
-					{
-						reset ($g_boxes_array);
-						$g_box_in_id = key ($g_boxes_array);
-						$g_box_in_object = current ($g_boxes_array);
-					}
+				if ($g_boxes_array)
+				{
+					reset ($g_boxes_array);
+					$g_box_in_id = key ($g_boxes_array);
+					$g_box_in_object = current ($g_boxes_array);
 				}
 			}
 
-			if ($g_box_in_object) { $g_messages_unread = $g_box_in_object->get_messages_since_date (1,0,0,1,"",true); }
-			else { $g_messages_unread = 0; }
-
 			$direct_cachedata['output_account_status_and_pms_unread_include'] = true;
+			$g_messages_unread = ($g_box_in_object ? $g_box_in_object->get_messages_since_date (1,0,0,1,"",true) : 0);
 
 			if ($g_messages_unread == 1) { $direct_cachedata['output_account_status_and_pms_unread_text'] = (direct_local_get ("core_userbox_unread_pms_1_1"))."<span style='font-weight:bold'><a href='".(direct_linker ("url0","m=account&s=pms&a=box&dsd=abox+in"))."' target='_self'>".(direct_local_get ("core_userbox_unread_pms_1_2"))."</a></span>".(direct_local_get ("core_userbox_unread_pms_1_3")); }
 			elseif ($g_messages_unread) { $direct_cachedata['output_account_status_and_pms_unread_text'] = (direct_local_get ("core_userbox_unread_pms_2_1"))."<span style='font-weight:bold'><a href='".(direct_linker ("url0","m=account&s=pms&a=box&dsd=abox+in"))."' target='_self'>$g_messages_unread</a></span>".(direct_local_get ("core_userbox_unread_pms_2_2")); }

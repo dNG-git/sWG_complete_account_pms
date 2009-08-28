@@ -62,8 +62,7 @@ all development packets)
 Testing for required classes
 ------------------------------------------------------------------------- */
 
-$g_continue_check = true;
-if (defined ("CLASS_direct_account_pms_box")) { $g_continue_check = false; }
+$g_continue_check = ((defined ("CLASS_direct_account_pms_box")) ? false: true);
 if (!defined ("CLASS_direct_datalinker")) { $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_datalinker.php"); }
 if (!defined ("CLASS_direct_datalinker")) { $g_continue_check = false; }
 
@@ -166,11 +165,8 @@ Set up additional settings
 	public function get ($f_bid = "",$f_uid = NULL,$f_load = true)
 	{
 		if (USE_debug_reporting) { direct_debug (7,"sWG/#echo(__FILEPATH__)# -account_pms_box->get ($f_bid,+f_uid,+f_load)- (#echo(__LINE__)#)"); }
-		$f_return = false;
 
-		if ($f_load) { $f_return = $this->get_aid (NULL,$f_bid,$f_uid); }
-		else { $f_return = parent::get ($f_bid,false); }
-
+		$f_return = ($f_load ? $this->get_aid (NULL,$f_bid,$f_uid) : parent::get ($f_bid,false));
 		return /*#ifdef(DEBUG):direct_debug (9,"sWG/#echo(__FILEPATH__)# -account_pms_box->get ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
 	}
 
@@ -309,17 +305,13 @@ $f_select_joins = array (
 
 		if ($f_count_only)
 		{
+			$f_cache_signature = ($f_all_boxes ? md5 ("msdc".$f_message_status) : md5 ("msdc".$this->data['ddbdatalinker_id_main'].$f_message_status));
 			$f_return = 0;
-
-			if ($f_all_boxes) { $f_cache_signature = md5 ("msdc".$f_message_status); }
-			else { $f_cache_signature = md5 ("msdc".$this->data['ddbdatalinker_id_main'].$f_message_status); }
 		}
 		else
 		{
+			$f_cache_signature = ($f_all_boxes ? md5 ("msd".$f_message_status) : md5 ("msd".$this->data['ddbdatalinker_id_object'].$f_message_status.$f_offset.$f_perpage.$f_sorting_mode));
 			$f_return = array ();
-
-			if ($f_all_boxes) { $f_cache_signature = md5 ("msd".$f_message_status); }
-			else { $f_cache_signature = md5 ("msd".$this->data['ddbdatalinker_id_object'].$f_message_status.$f_offset.$f_perpage.$f_sorting_mode); }
 		}
 
 		$f_boxes_signature = md5 ("msd".$this->data['ddbdatalinker_id_main']);
@@ -328,11 +320,7 @@ $f_select_joins = array (
 		elseif (($f_count_only)&&(!$f_all_boxes)&&($f_message_status == 3)&&($f_date < 1)) { $f_return = $this->data['ddbdatalinker_objects']; }
 		elseif (isset ($this->data['ddbdatalinker_id_main']))
 		{
-			if ($f_count_only)
-			{
-				if (($f_date < 1)&&($f_message_status == 3)) { $f_select_attributes = array ("sum-rows({$direct_settings['datalinkerd_table']}.ddbdatalinker_objects)"); }
-				else { $f_select_attributes = array ("count-rows({$direct_settings['datalinker_table']}.ddbdatalinker_id)"); }
-			}
+			if ($f_count_only) { $f_select_attributes = ((($f_date < 1)&&($f_message_status == 3)) ? array ("sum-rows({$direct_settings['datalinkerd_table']}.ddbdatalinker_objects)") : array ("count-rows({$direct_settings['datalinker_table']}.ddbdatalinker_id)")); }
 			else { $f_select_attributes = array ($direct_settings['users_pms_table'].".*",$direct_settings['data_table'].".ddbdata_sid",$direct_settings['data_table'].".ddbdata_mode_user",$direct_settings['data_table'].".ddbdata_mode_group",$direct_settings['data_table'].".ddbdata_mode_all",$direct_settings['users_table'].".ddbusers_type",$direct_settings['users_table'].".ddbusers_banned",$direct_settings['users_table'].".ddbusers_deleted",$direct_settings['users_table'].".ddbusers_name",$direct_settings['users_table'].".ddbusers_title",$direct_settings['users_table'].".ddbusers_avatar",$direct_settings['users_table'].".ddbusers_signature",$direct_settings['users_table'].".ddbusers_rating"); }
 
 			$this->define_extra_attributes ($f_select_attributes);

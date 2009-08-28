@@ -82,11 +82,7 @@ function direct_output_oset_account_pms_box ()
 
 	$f_return = "<p class='pagecontenttitle'>{$direct_cachedata['output_box_name']}</p>\n<p class='pagecontent' style='text-align:center'>".(direct_local_get ("account_pms_quota")).": <span style='font-weight:bold'>{$direct_cachedata['output_pms_counter']}</span> ({$direct_cachedata['output_pms_quota_percentage']})</p>";
 
-	if (empty ($direct_cachedata['output_pms_messages']))
-	{
-		if ($direct_cachedata['output_box'] == "out") { $f_return .= "<p class='pagecontent' style='font-weight:bold'>".(direct_local_get ("account_pms_box_out_list_empty"))."</p>"; }
-		else { $f_return .= "<p class='pagecontent' style='font-weight:bold'>".(direct_local_get ("account_pms_box_in_list_empty"))."</p>"; }
-	}
+	if (empty ($direct_cachedata['output_pms_messages'])) { $f_return .= (($direct_cachedata['output_box'] == "out") ? "<p class='pagecontent' style='font-weight:bold'>".(direct_local_get ("account_pms_box_out_list_empty"))."</p>" : "<p class='pagecontent' style='font-weight:bold'>".(direct_local_get ("account_pms_box_in_list_empty"))."</p>"); }
 	else
 	{
 		if ($direct_cachedata['output_pages'] > 1) { $f_return .= "<p class='pageborder2' style='text-align:center'><span class='pageextracontent' style='font-size:10px'>".(direct_output_pages_generator ($direct_cachedata['output_page_url'],$direct_cachedata['output_pages'],$direct_cachedata['output_page']))."</span></p>"; }
@@ -95,8 +91,7 @@ $f_return .= ("\n<table cellspacing='1' summary='' class='pageborder1' style='wi
 <thead><tr>
 <td valign='middle' align='center' class='pagetitlecellbg' style='width:50%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_title"))."</span></td>");
 
-		if ($direct_cachedata['output_box'] == "out") { $f_return .= "\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_to"))."</span></td>"; }
-		else { $f_return .= "\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_from"))."</span></td>"; }
+		$f_return .= (($direct_cachedata['output_box'] == "out") ? "\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_to"))."</span></td>" : "\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_from"))."</span></td>");
 
 $f_return .= ("\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent' style='font-size:10px'>".(direct_local_get ("account_pms_time"))."</span></td>
 </tr></thead><tbody>");
@@ -110,8 +105,7 @@ $f_return .= ("\n<td valign='middle' align='center' class='pagetitlecellbg' styl
 $f_return .= ("<a href=\"{$f_message_array['pageurl']}\" target='_self'>{$f_message_array['title']}</a></span></td>
 <td valign='middle' align='center' class='pageextrabg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pageextracontent'>");
 
-			if ($f_message_array['userpageurl']) { $f_return .= "<a href=\"{$f_message_array['userpageurl']}\" target='_self'>{$f_message_array['username']}</a>"; }
-			else { $f_return .= $f_message_array['username']; }
+			$f_return .= ($f_message_array['userpageurl'] ? "<a href=\"{$f_message_array['userpageurl']}\" target='_self'>{$f_message_array['username']}</a>" : $f_message_array['username']);
 
 $f_return .= ("</span></td>
 <td valign='middle' align='center' class='pagebg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagecontent'>{$f_message_array['time']}</span></td>
@@ -140,9 +134,7 @@ function direct_output_oset_account_pms_view ()
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_output_oset_account_pms_view ()- (#echo(__LINE__)#)"); }
 
 	$direct_classes['basic_functions']->require_file ($direct_settings['path_system']."/osets/$direct_settings[theme_oset]/swgi_account_profile.php");
-
-	if ($direct_cachedata['output_message']['type'] == "out") { $f_userdata_type = direct_local_get ("account_pms_to"); }
-	else { $f_userdata_type = direct_local_get ("account_pms_from"); }
+	$f_userdata_type = (($direct_cachedata['output_message']['type'] == "out") ? direct_local_get ("account_pms_to") : direct_local_get ("account_pms_from"));
 
 $f_return = ("<p class='pagecontenttitle'>{$direct_cachedata['output_message']['title']}</p>
 <p class='pageborder2' style='text-align:left'><span class='pagecontent'>{$direct_cachedata['output_message']['text']}</span></p>

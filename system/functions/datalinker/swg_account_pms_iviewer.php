@@ -84,8 +84,8 @@ function direct_datalinker_account_pms_iviewer ($f_viewer_data,&$f_object)
 
 	if (isset ($f_viewer_data['handler']))
 	{
-		$f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/functions/datalinker/swg_account_pms.php");
-		if ($f_continue_check) { $f_object_iview =& direct_datalinker_account_pms ($f_object,false); }
+		if ($direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/functions/datalinker/swg_account_pms.php")) { $f_object_iview =& direct_datalinker_account_pms ($f_object,false); }
+		else { $f_object_iview = NULL; }
 
 		if ($f_object_iview)
 		{
@@ -254,14 +254,12 @@ $f_return = array (
 	if (isset ($f_viewer_data['handler']))
 	{
 		$f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_box.php");
-		if ($f_continue_check) { $f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/swg_formtags.php"); }
-		if ($f_continue_check) { $f_continue_check = direct_class_init ("formtags"); }
+		if ((!defined ("CLASS_direct_formtags"))&&($f_continue_check)) { $f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/swg_formtags.php"); }
+		if ((!isset ($direct_classes['formtags']))&&($f_continue_check)) { $f_continue_check = direct_class_init ("formtags"); }
 
 		$f_box_array = NULL;
-		$f_message_array = NULL;
+		$f_message_array = ($f_continue_check ? $f_object->get ("",false) : NULL);
 		$f_subs_check = false;
-
-		if ($f_continue_check) { $f_message_array = $f_object->get ("",false); }
 
 		if (is_array ($f_message_array))
 		{
@@ -296,9 +294,7 @@ $f_return = array (
 			$f_return['object_last_time'] = $f_parsed_array['time'];
 			$f_return['object_url'] = $f_parsed_array['pageurl'];
 			$f_return['object_available'] = true;
-
-			if ($f_parsed_array['read']) { $f_return['object_new'] = false; }
-			else { $f_return['object_new'] = true; }
+			$f_return['object_new'] = ($f_parsed_array['read'] ? false : true);
 
 			if ((!$f_subs_check)&&(is_array ($f_box_array)))
 			{

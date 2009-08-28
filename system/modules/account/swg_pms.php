@@ -117,40 +117,37 @@ case "box":
 	$g_box_object = NULL;
 	$g_datalinker_object = new direct_datalinker_uhome ();
 
-	if ($g_datalinker_object)
+	if (($g_datalinker_object)&&($g_datalinker_object->get ($direct_settings['user']['id'])))
 	{
-		if ($g_datalinker_object->get ($direct_settings['user']['id']))
+		switch ($direct_cachedata['output_box'])
 		{
-			switch ($direct_cachedata['output_box'])
-			{
-			case "in":
-			{
-				$g_box_type = 1;
-				break 1;
-			}
-			case "out":
-			{
-				$g_box_type = 2;
-				break 1;
-			}
-			default:
-			{
-				$g_box_type = "";
+		case "in":
+		{
+			$g_box_type = 1;
+			break 1;
+		}
+		case "out":
+		{
+			$g_box_type = 2;
+			break 1;
+		}
+		default:
+		{
+			$g_box_type = "";
 
 $g_datalinker_object->define_extra_conditions (($direct_classes['db']->define_row_conditions_encode ("ddbdatalinker_id",$direct_cachedata['output_box'],"string"))."
 <element2 attribute='ddbdatalinker_type' value='3' type='number' operator='&lt;=' />");
-			}
-			}
+		}
+		}
 
-			$g_boxes_array = $g_datalinker_object->get_subs ("direct_account_pms_box","u-".$direct_settings['user']['id'],NULL,"c0a38f7c90c17551fb03dbd2d80f0aba",$g_box_type,0,0,"position-asc");
-			// md5 ("account_pms")
+		$g_boxes_array = $g_datalinker_object->get_subs ("direct_account_pms_box","u-".$direct_settings['user']['id'],NULL,"c0a38f7c90c17551fb03dbd2d80f0aba",$g_box_type,0,0,"position-asc");
+		// md5 ("account_pms")
 
-			if ($g_boxes_array)
-			{
-				reset ($g_boxes_array);
-				$g_box_object = current ($g_boxes_array);
-				if ($g_box_object) { $g_box_array = $g_box_object->get (); }
-			}
+		if ($g_boxes_array)
+		{
+			reset ($g_boxes_array);
+			$g_box_object = current ($g_boxes_array);
+			if ($g_box_object) { $g_box_array = $g_box_object->get (); }
 		}
 	}
 
@@ -159,7 +156,7 @@ $g_datalinker_object->define_extra_conditions (($direct_classes['db']->define_ro
 	if ($g_box_object)
 	{
 		if ($g_box_array['ddbdatalinker_type'] == 1) { $direct_cachedata['output_box'] = "in"; }
-		if ($g_box_array['ddbdatalinker_type'] == 2) { $direct_cachedata['output_box'] = "out"; }
+		elseif ($g_box_array['ddbdatalinker_type'] == 2) { $direct_cachedata['output_box'] = "out"; }
 
 		if (strlen ($g_box_array['ddbdatalinker_title_alt'])) { $direct_cachedata['output_box_name'] = direct_html_encode_special ($g_box_array['ddbdatalinker_title_alt']); }
 		elseif (strlen ($g_box_array['ddbdatalinker_title'])) { $direct_cachedata['output_box_name'] = direct_html_encode_special ($g_box_array['ddbdatalinker_title']); }
@@ -276,17 +273,16 @@ case "view":
 	$direct_classes['basic_functions']->require_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_box.php");
 	$direct_classes['basic_functions']->require_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_message.php");
 
+	$g_box_array = NULL;
 	$g_message_object = new direct_account_pms_message ();
 
-	if ($g_message_object) { $g_message_array = $g_message_object->get ($g_message_id,$direct_settings['user']['id']); }
-	else { $g_message_array = NULL; }
+	$g_message_array = ($g_message_object ? $g_message_object->get ($g_message_id,$direct_settings['user']['id']) : NULL);
 
 	if ($g_message_array)
 	{
 		$g_box_object = new direct_account_pms_box ();
-		$g_box_array = $g_box_object->get ($g_message_array['ddbdatalinker_id_main'],$direct_settings['user']['id']);
+		if ($g_box_object) { $g_box_array = $g_box_object->get ($g_message_array['ddbdatalinker_id_main'],$direct_settings['user']['id']); }
 	}
-	else { $g_box_array = NULL; }
 
 	if (!is_array ($g_box_array)) { $direct_classes['error_functions']->error_page ("standard","account_pms_mid_invalid","sWG/#echo(__FILEPATH__)# _a=view_ (#echo(__LINE__)#)"); }
 	else

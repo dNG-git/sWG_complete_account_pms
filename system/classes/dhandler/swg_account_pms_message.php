@@ -62,8 +62,7 @@ all development packets)
 Testing for required classes
 ------------------------------------------------------------------------- */
 
-$g_continue_check = true;
-if (defined ("CLASS_direct_account_pms_message")) { $g_continue_check = false; }
+$g_continue_check = ((defined ("CLASS_direct_account_pms_message")) ? false : true);
 if (!defined ("CLASS_direct_datalinker")) { $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_datalinker.php"); }
 if (!defined ("CLASS_direct_datalinker")) { $g_continue_check = false; }
 
@@ -139,10 +138,7 @@ Set up an additional post class element :)
 		$this->data_sid = "c0a38f7c90c17551fb03dbd2d80f0aba";
 
 		if (is_string ($f_data)) { $this->data_bid = $f_data; }
-		else
-		{
-			if (isset ($f_data['bid'])) { $this->data_bid = $f_data['bid']; }
-		}
+		elseif (isset ($f_data['bid'])) { $this->data_bid = $f_data['bid']; }
 	}
 
 	//f// direct_account_pms_message->define_bid ($f_bid)
@@ -185,9 +181,7 @@ Set up an additional post class element :)
 			if (((is_bool ($f_state))||(is_string ($f_state)))&&($f_state)) { $f_return = true; }
 			elseif (($f_state === NULL)&&($this->data['ddbdatalinker_position'])) { $f_return = true; }
 
-			if ($f_return) { $this->data['ddbdatalinker_position'] = 0; }
-			else { $this->data['ddbdatalinker_position'] = 1; }
-
+			$this->data['ddbdatalinker_position'] = ($f_return ? 0 : 1);
 			$this->data_changed['ddbdatalinker_position'] = true;
 			if ($f_update) { parent::update (false,true); }
 		}
@@ -306,11 +300,8 @@ Set up an additional post class element :)
 	public function get ($f_mid = "",$f_content = true,$f_load = true)
 	{
 		if (USE_debug_reporting) { direct_debug (7,"sWG/#echo(__FILEPATH__)# -account_pms_message->get ($f_mid,+f_content,+f_load)- (#echo(__LINE__)#)"); }
-		$f_return = false;
 
-		if (($f_content)||($f_load)) { $f_return = $this->get_aid (NULL,$f_mid,$f_content); }
-		else { $f_return = parent::get ($f_mid,false); }
-
+		$f_return = ((($f_content)||($f_load)) ? $this->get_aid (NULL,$f_mid,$f_content) : parent::get ($f_mid,false));
 		return /*#ifdef(DEBUG):direct_debug (9,"sWG/#echo(__FILEPATH__)# -account_pms_message->get ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
 	}
 
@@ -418,25 +409,17 @@ $f_select_joins = array (
 		if (($f_return)&&(count ($this->data) > 1))
 		{
 			$f_return[$f_prefix."id"] = "swgdhandleraccountpmsmessage".$this->data['ddbdatalinker_id'];
-
-			if ($this->data['ddbdatalinker_type'] == 4) { $f_return[$f_prefix."type"] = "in"; }
-			else { $f_return[$f_prefix."type"] = "out"; }
+			$f_return[$f_prefix."type"] = (($this->data['ddbdatalinker_type'] == 4) ? "in" : "out");
 
 			if (($f_connector_type != "asis")&&(strpos ($f_connector,"javascript:") === 0)) { $f_connector_type = "asis"; }
 
 			$f_pageurl = str_replace ("[a]","view",$f_connector);
-
-			if ($f_connector_type == "asis") { $f_pageurl = str_replace ("[oid]",$this->data['ddbdatalinker_id'],$f_pageurl); }
-			else { $f_pageurl = str_replace ("[oid]","amid+{$this->data['ddbdatalinker_id']}++",$f_pageurl); }
-
+			$f_pageurl = (($f_connector_type == "asis") ? str_replace ("[oid]",$this->data['ddbdatalinker_id'],$f_pageurl) : str_replace ("[oid]","amid+{$this->data['ddbdatalinker_id']}++",$f_pageurl));
 			$f_pageurl = preg_replace ("#\[(.*?)\]#","",$f_pageurl);
 			$f_return[$f_prefix."pageurl"] = direct_linker ($f_connector_type,$f_pageurl);
 
 			$f_pageurl = str_replace ("[a]","box",$f_connector);
-
-			if ($f_connector_type == "asis") { $f_pageurl = str_replace ("[oid]",$this->data['ddbdatalinker_id_main'],$f_pageurl); }
-			else { $f_pageurl = str_replace ("[oid]","abox+{$this->data['ddbdatalinker_id_main']}++",$f_pageurl); }
-
+			$f_pageurl = (($f_connector_type == "asis") ? str_replace ("[oid]",$this->data['ddbdatalinker_id_main'],$f_pageurl) : str_replace ("[oid]","abox+{$this->data['ddbdatalinker_id_main']}++",$f_pageurl));
 			$f_pageurl = preg_replace ("#\[(.*?)\]#","",$f_pageurl);
 			$f_return[$f_prefix."pageurl_box"] = direct_linker ($f_connector_type,$f_pageurl);
 
@@ -464,14 +447,9 @@ $f_prefix."usersignature" => ""
 
 			$f_return = array_merge ($f_return,$f_user_parsed_array);
 
-			if ($this->data['ddbdatalinker_sorting_date']) { $f_return[$f_prefix."time"] = $direct_classes['basic_functions']->datetime ("shortdate&time",$this->data['ddbdatalinker_sorting_date'],$direct_settings['user']['timezone'],(direct_local_get ("datetime_dtconnect"))); }
-			else { $f_return[$f_prefix."time"] = direct_local_get ("core_unknown"); }
-
-			if (isset ($this->data['ddbdata_data'])) { $f_return[$f_prefix."text"] = $direct_classes['formtags']->decode ($this->data['ddbdata_data']); }
-			else { $f_return[$f_prefix."text"] = NULL; }
-
-			if ($this->data['ddbdatalinker_position']) { $f_return[$f_prefix."read"] = false; }
-			else { $f_return[$f_prefix."read"] = true; }
+			$f_return[$f_prefix."time"] = ($this->data['ddbdatalinker_sorting_date'] ? $direct_classes['basic_functions']->datetime ("shortdate&time",$this->data['ddbdatalinker_sorting_date'],$direct_settings['user']['timezone'],(direct_local_get ("datetime_dtconnect"))) : direct_local_get ("core_unknown"));
+			$f_return[$f_prefix."text"] = ((isset ($this->data['ddbdata_data'])) ? $direct_classes['formtags']->decode ($this->data['ddbdata_data']) : NULL);
+			$f_return[$f_prefix."read"] = ($this->data['ddbdatalinker_position'] ? false : true);
 		}
 
 		return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -account_pms_message->parse ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
@@ -699,9 +677,7 @@ $f_insert_array = array (
 		else
 		{
 			$direct_classes['db']->v_transaction_begin ();
-
-			if ($this->data['ddbdatalinker_id'] == $this->data['ddbdatalinker_id_object']) { $f_return = parent::update ($f_pms_settings,$f_pms_settings,false); }
-			else { $f_return = parent::update ($f_pms_settings,false,false); }
+			$f_return = (($this->data['ddbdatalinker_id'] == $this->data['ddbdatalinker_id_object']) ? parent::update ($f_pms_settings,$f_pms_settings,false) : parent::update ($f_pms_settings,false,false));
 
 			if (($f_return)&&(count ($this->data) > 1))
 			{
@@ -734,8 +710,7 @@ $f_insert_array = array (
 					}
 				}
 
-				if ($this->data['ddbdatalinker_type'] == 4) { $f_data_owner = "ddbpms_to_id"; }
-				else { $f_data_owner = "ddbpms_from_id"; }
+				$f_data_owner = (($this->data['ddbdatalinker_type'] == 4) ? "ddbpms_to_id" : "ddbpms_from_id");
 
 				if (($f_return)&&($f_pms_content)&&($this->data['ddbdatalinker_id'] == $this->data['ddbdatalinker_id_object'])&&($this->is_changed (array ("ddbdatalinker_id_main",$f_data_owner,"ddbdata_data","ddbdata_mode_user","ddbdata_mode_group","ddbdata_mode_all"))))
 				{

@@ -88,10 +88,9 @@ function &direct_datalinker_account_pms (&$f_object,$f_message_content = true)
 
 	if (is_object ($f_object))
 	{
-		$f_continue_check = $direct_classes['basic_functions']->settings_get ($direct_settings['path_data']."/settings/swg_account.php");
-		$f_object_array = $f_object->get ();
+		$f_object_array = (($direct_classes['basic_functions']->settings_get ($direct_settings['path_data']."/settings/swg_account.php")) ? $f_object->get () : NULL);
 
-		if (($f_object_array)&&($f_continue_check)&&(isset ($f_object_array['ddbdatalinker_type'])))
+		if ((is_array ($f_object_array))&&(isset ($f_object_array['ddbdatalinker_type'])))
 		{
 			switch ($f_object_array['ddbdatalinker_type'])
 			{
@@ -99,27 +98,15 @@ function &direct_datalinker_account_pms (&$f_object,$f_message_content = true)
 			case 2:
 			case 3:
 			{
-				$f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_box.php");
-				if ($f_continue_check) { $f_return = new direct_account_pms_box (); }
-
-				if ($f_return)
-				{
-					if (!$f_return->get ($f_object_array['ddbdatalinker_id'])) { $f_return = false; }
-				}
-
+				if ($direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_box.php")) { $f_return = new direct_account_pms_box (); }
+				if (($f_return)&&(!$f_return->get ($f_object_array['ddbdatalinker_id']))) { $f_return = false; }
 				break 1;
 			}
 			case 4:
 			case 5:
 			{
-				$f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_message.php");
-				if ($f_continue_check) { $f_return = new direct_account_pms_message (); }
-
-				if ($f_return)
-				{
-					if (!$f_return->get ($f_object_array['ddbdatalinker_id'],$f_message_content)) { $f_return = false; }
-				}
-
+				if ($direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_message.php")) { $f_return = new direct_account_pms_message (); }
+				if (($f_return)&&(!$f_return->get ($f_object_array['ddbdatalinker_id'],$f_message_content))) { $f_return = false; }
 				break 1;
 			}
 			}

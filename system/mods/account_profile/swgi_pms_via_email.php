@@ -101,9 +101,7 @@ function direct_mods_account_profile_pms_via_email_edit ($f_data)
 
 	if ($f_continue_check)
 	{
-		if ($f_data[1]['ddbusers_pms_via_email']) { $direct_cachedata['i_apms_via_email'] = "<evars><no><value value='0' /><text><![CDATA[".(direct_local_get ("core_no"))."]]></text></no><yes><value value='1' /><selected value='1' /><text><![CDATA[".(direct_local_get ("core_yes"))."]]></text></yes></evars>"; }
-		else { $direct_cachedata['i_apms_via_email'] = "<evars><no><value value='0' /><selected value='1' /><text><![CDATA[".(direct_local_get ("core_no"))."]]></text></no><yes><value value='1' /><text><![CDATA[".(direct_local_get ("core_yes"))."]]></text></yes></evars>"; }
-
+		$direct_cachedata['i_apms_via_email'] = ($f_data[1]['ddbusers_pms_via_email'] ? "<evars><no><value value='0' /><text><![CDATA[".(direct_local_get ("core_no"))."]]></text></no><yes><value value='1' /><selected value='1' /><text><![CDATA[".(direct_local_get ("core_yes"))."]]></text></yes></evars>" : "<evars><no><value value='0' /><selected value='1' /><text><![CDATA[".(direct_local_get ("core_no"))."]]></text></no><yes><value value='1' /><text><![CDATA[".(direct_local_get ("core_yes"))."]]></text></yes></evars>");
 		$direct_classes['formbuilder']->entry_add ("subtitle","pms_setting",(direct_local_get ("account_pms_setting")));
 		$direct_classes['formbuilder']->entry_add_select ("apms_via_email",(direct_local_get ("account_pms_via_email")),false,"s");
 	}
@@ -174,12 +172,7 @@ function direct_mods_account_profile_pms_via_email_edit_save ($f_data)
 		$f_return = NULL;
 	}
 
-	if ($f_continue_check)
-	{
-		if ($direct_cachedata['i_apms_via_email']) { $f_return['ddbusers_pms_via_email'] = 1; }
-		else { $f_return['ddbusers_pms_via_email'] = 0; }
-	}
-
+	if ($f_continue_check) { $f_return['ddbusers_pms_via_email'] = ($direct_cachedata['i_apms_via_email'] ? 1 : 0); }
 	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit_save ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
 }
 
@@ -200,9 +193,7 @@ function direct_mods_account_profile_pms_via_email_view ($f_data)
 {
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_view (+f_data)- (#echo(__LINE__)#)"); }
 
-	if (is_array ($f_data[0])) { $f_return = $f_data[0]; }
-	else { $f_return = array (); }
-
+	$f_return = ((is_array ($f_data[0])) ? $f_data[0] : array ());
 	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit_view ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
 }
 
