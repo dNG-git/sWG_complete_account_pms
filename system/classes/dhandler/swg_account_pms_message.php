@@ -352,7 +352,7 @@ $f_select_joins = array (
 			if (strlen ($this->data_bid)) { $this->define_extra_conditions ($direct_classes['db']->define_row_conditions_encode ($direct_settings['datalinker_table'].".ddbdatalinker_id_main",$this->data_bid,"string")); }
 			$f_result_array = parent::get_aid ($f_attributes,$f_values);
 
-			if (($f_result_array)&&($f_result_array['ddbdatalinker_sid'] == $this->data_sid)&&(($f_result_array['ddbdatalinker_type'] == 4)||($f_result_array['ddbdatalinker_type'] == 5)))
+			if (($f_result_array)&&($f_result_array['ddbdatalinker_sid'] == $this->data_sid)&&(isset ($f_result_array['ddbpms_id'])))
 			{
 				$f_rights_check = false;
 				$this->data = $f_result_array;

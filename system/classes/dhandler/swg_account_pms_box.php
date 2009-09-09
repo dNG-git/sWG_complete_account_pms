@@ -195,7 +195,7 @@ Set up additional settings
 		{
 			$f_result_array = parent::get_aid ($f_attributes,$f_values);
 
-			if (($f_result_array)&&($f_result_array['ddbdatalinker_sid'] == $this->data_sid)&&($f_result_array['ddbdatalinker_type'] < 4))
+			if (($f_result_array)&&($f_result_array['ddbdatalinker_sid'] == $this->data_sid))
 			{
 				$f_rights_check = false;
 				$this->data = $f_result_array;
