@@ -127,6 +127,7 @@ Informing the system about available functions
 
 		$this->functions['define_bid'] = true;
 		$this->functions['define_read'] = true;
+		$this->functions['insert_link'] = false;
 		$this->functions['parse'] = isset ($direct_classes['formtags']);
 		if ((!defined ("CLASS_direct_account_pms_box"))||(!defined ("CLASS_direct_datalinker_uhome"))) { $this->functions['set'] = false; }
 
@@ -377,6 +378,23 @@ $f_select_joins = array (
 		}
 
 		return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -account_pms_message->get_aid ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
+	}
+
+	//f// direct_account_pms_message->insert_link ($f_insert_mode_deactivate = true)
+/**
+	* Writes new object data to the database.
+	*
+	* @param  boolean $f_insert_mode_deactivate Deactive insert mode after calling
+	*         update ()
+	* @uses   direct_debug()
+	* @uses   USE_debug_reporting
+	* @return boolean Always false; this method is unsupported
+	* @since  v0.1.00
+*/
+	public function insert_link ($f_insert_mode_deactivate = true)
+	{
+		if (USE_debug_reporting) { direct_debug (3,"sWG/#echo(__FILEPATH__)# -account_pms_message->insert_link (+f_insert_mode_deactivate)- (#echo(__LINE__)#)"); }
+		return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -account_pms_message->insert_link ()- (#echo(__LINE__)#)",:#*/false/*#ifdef(DEBUG):,true):#*/;
 	}
 
 	//f// direct_account_pms_message->parse ($f_connector,$f_connector_type = "url0",$f_prefix = "")
@@ -722,7 +740,7 @@ $f_insert_array = array (
 						$f_update_values = "<sqlvalues>";
 						if (($this->data_insert_mode)||(isset ($this->data_changed['ddbdatalinker_id_object']))) { $f_update_values .= $direct_classes['db']->define_set_attributes_encode ($direct_settings['data_table'].".ddbdata_id",$this->data['ddbdatalinker_id_object'],"string"); }
 						if (($this->data_insert_mode)||(isset ($this->data_changed['ddbdatalinker_id_main']))) { $f_update_values .= $direct_classes['db']->define_set_attributes_encode ($direct_settings['data_table'].".ddbdata_id_cat",$this->data['ddbdatalinker_id_main'],"string"); }
-						if (($this->data_insert_mode)||(isset ($this->data_changed[$f_data_owner]))) { $f_update_values .= $direct_classes['db']->define_set_attributes_encode ($direct_settings['data_table'].".ddbdata_owner",$this->data_changed[$f_data_owner],"string"); }
+						if (($this->data_insert_mode)||(isset ($this->data_changed[$f_data_owner]))) { $f_update_values .= $direct_classes['db']->define_set_attributes_encode ($direct_settings['data_table'].".ddbdata_owner",$this->data[$f_data_owner],"string"); }
 						if (($this->data_insert_mode)||(isset ($this->data_changed['ddbdata_data']))) { $f_update_values .= $direct_classes['db']->define_set_attributes_encode ($direct_settings['data_table'].".ddbdata_data",$this->data['ddbdata_data'],"string"); }
 						if ($this->data_insert_mode) { $f_update_values .= "<element1 attribute='{$direct_settings['data_table']}.ddbdata_sid' value='{$this->data_sid}' type='string' />"; }
 						if (($this->data_insert_mode)||(isset ($this->data_changed['ddbdata_mode_user']))) { $f_update_values .= $direct_classes['db']->define_set_attributes_encode ($direct_settings['data_table'].".ddbdata_mode_user",$this->data['ddbdata_mode_user'],"string"); }

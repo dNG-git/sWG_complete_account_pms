@@ -87,28 +87,28 @@ function direct_output_oset_account_pms_box ()
 	{
 		if ($direct_cachedata['output_pages'] > 1) { $f_return .= "<p class='pageborder2' style='text-align:center'><span class='pageextracontent' style='font-size:10px'>".(direct_output_pages_generator ($direct_cachedata['output_page_url'],$direct_cachedata['output_pages'],$direct_cachedata['output_page']))."</span></p>"; }
 
-$f_return .= ("\n<table cellspacing='1' summary='' class='pageborder1' style='width:100%'>
+$f_return .= ("\n<table class='pageborder1' style='width:100%'>
 <thead><tr>
-<td valign='middle' align='center' class='pagetitlecellbg' style='width:50%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_title"))."</span></td>");
+<td class='pagetitlecellbg' style='width:50%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_title"))."</span></td>");
 
-		$f_return .= (($direct_cachedata['output_box'] == "out") ? "\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_to"))."</span></td>" : "\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_from"))."</span></td>");
+		$f_return .= (($direct_cachedata['output_box'] == "out") ? "\n<td class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_to"))."</span></td>" : "\n<td class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_from"))."</span></td>");
 
-$f_return .= ("\n<td valign='middle' align='center' class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent' style='font-size:10px'>".(direct_local_get ("account_pms_time"))."</span></td>
+$f_return .= ("\n<td class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent' style='font-size:10px'>".(direct_local_get ("account_pms_time"))."</span></td>
 </tr></thead><tbody>");
 
 		foreach ($direct_cachedata['output_pms_messages'] as $f_message_array)
 		{
-			$f_return .= "<tr>\n<td valign='middle' align='left' class='pagebg' style='width:50%;padding:$direct_settings[theme_td_padding]'><span class='pagecontent' style='font-weight:bold'>";
+			$f_return .= "<tr>\n<td class='pagebg' style='width:50%;padding:$direct_settings[theme_td_padding];text-align:left;vertical-align:middle'><span class='pagecontent' style='font-weight:bold'>";
 
 			if (($direct_cachedata['output_box'] == "in")&&(!$f_message_array['read'])) { $f_return .= "<img src='".(direct_linker_dynamic ("url0","s=cache&dsd=dfile+$direct_settings[path_themes]/$direct_settings[theme]/status_message_new.png",true,false))."' border='0' alt='".(direct_local_get ("account_pms_unread"))."' title='".(direct_local_get ("account_pms_unread"))."' style='float:right' />"; }
 
 $f_return .= ("<a href=\"{$f_message_array['pageurl']}\" target='_self'>{$f_message_array['title']}</a></span></td>
-<td valign='middle' align='center' class='pageextrabg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pageextracontent'>");
+<td class='pageextrabg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pageextracontent'>");
 
 			$f_return .= ($f_message_array['userpageurl'] ? "<a href=\"{$f_message_array['userpageurl']}\" target='_self'>{$f_message_array['username']}</a>" : $f_message_array['username']);
 
 $f_return .= ("</span></td>
-<td valign='middle' align='center' class='pagebg' style='width:25%;padding:$direct_settings[theme_td_padding]'><span class='pagecontent'>{$f_message_array['time']}</span></td>
+<td class='pagebg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagecontent'>{$f_message_array['time']}</span></td>
 </tr>");
 		}
 
@@ -138,17 +138,17 @@ function direct_output_oset_account_pms_view ()
 
 $f_return = ("<p class='pagecontenttitle'>{$direct_cachedata['output_message']['title']}</p>
 <p class='pageborder2' style='text-align:left'><span class='pagecontent'>{$direct_cachedata['output_message']['text']}</span></p>
-<table cellspacing='1' summary='' class='pageborder1' style='width:100%'>
+<table class='pageborder1' style='width:100%'>
 <thead><tr>
-<td align='left' class='pagetitlecellbg' style='padding:$direct_settings[theme_td_padding]'><span class='pagetitlecellcontent'>$f_userdata_type</span></td>
+<td class='pagetitlecellbg' style='padding:$direct_settings[theme_td_padding];text-align:left'><span class='pagetitlecellcontent'>$f_userdata_type</span></td>
 </tr></thead><tbody><tr>
-<td valign='middle' align='left' class='pageextrabg' style='padding:$direct_settings[theme_td_padding]'>".(direct_account_oset_parse_user_fullh ($direct_cachedata['output_message'],"page","","","user"))."</td>
+<td class='pageextrabg' style='padding:$direct_settings[theme_td_padding];text-align:left'>".(direct_account_oset_parse_user_fullh ($direct_cachedata['output_message'],"page","","","user"))."</td>
 </tr>");
 
 	if ($direct_cachedata['output_message']['usersignature'])
 	{
 $f_return .= ("<tr>
-<td align='center' class='pagebg' style='padding:$direct_settings[theme_td_padding]'><span class='pagecontent'>{$direct_cachedata['output_message']['usersignature']}</span></td>
+<td class='pagebg' style='padding:$direct_settings[theme_td_padding];text-align:center'><span class='pagecontent'>{$direct_cachedata['output_message']['usersignature']}</span></td>
 </tr>");
 	}
 

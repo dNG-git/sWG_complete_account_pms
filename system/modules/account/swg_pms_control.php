@@ -470,7 +470,6 @@ $g_insert_array = array (
 "ddbdatalinker_sorting_date" => $direct_cachedata['core_time'],
 "ddbdatalinker_symbol" => "",
 "ddbdatalinker_title" => $direct_cachedata['i_atitle'],
-"ddbpms_id" => $g_sender_message_id,
 "ddbpms_from_id" => $direct_settings['user']['id'],
 "ddbpms_from_ip" => $direct_settings['user_ip'],
 "ddbpms_to_id" => $g_recipient_uid,
@@ -519,7 +518,6 @@ $g_insert_array = array (
 "ddbdatalinker_sorting_date" => $direct_cachedata['core_time'],
 "ddbdatalinker_symbol" => "",
 "ddbdatalinker_title" => $direct_cachedata['i_atitle'],
-"ddbpms_id" => $g_recipient_message_id,
 "ddbpms_from_id" => $direct_settings['user']['id'],
 "ddbpms_from_ip" => $direct_settings['user_ip'],
 "ddbpms_to_id" => $g_recipient_uid,
@@ -637,7 +635,7 @@ View form
 			direct_output_related_manager ("account_pms_control_new_form","post_module_service_action");
 			$direct_classes['output']->oset ("default","form");
 			$direct_classes['output']->header (false,true,$direct_settings['p3p_url'],$direct_settings['p3p_cp']);
-			$direct_classes['output']->header_elements ("<script language='JavaScript1.5' src='".(direct_linker_dynamic ("url0","s=cache&dsd=dfile+$direct_settings[path_mmedia]/swg_default_filter.php.js++dbid+".$direct_settings['product_buildid'],true))."' type='text/javascript'><!-- // Filter logic module // --></script>","javascript_swg_default_filter.php.js");
+			$direct_classes['output']->header_elements ("<script src='".(direct_linker_dynamic ("url0","s=cache&dsd=dfile+$direct_settings[path_mmedia]/swg_default_filter.php.js++dbid+".$direct_settings['product_buildid'],true))."' type='text/javascript'><!-- // Filter logic module // --></script>","javascript_swg_default_filter.php.js");
 			$direct_classes['output']->page_show ($direct_cachedata['output_formtitle']);
 		}
 	}

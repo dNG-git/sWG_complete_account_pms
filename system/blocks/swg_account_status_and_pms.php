@@ -98,7 +98,7 @@ function direct_output_block_account_status_and_pms ($f_options)
 
 			if ($direct_classes['kernel']->v_usertype_get_int ($direct_settings['user']['type']))
 			{
-$f_return .= ("<script language='JavaScript1.5' type='text/javascript'><![CDATA[
+$f_return .= ("<script type='text/javascript'><![CDATA[
 if ((djs_swgAJAX)&&(djs_swgDOM))
 {
 	if ((djs_swgDOM_content_editable)&&(djs_swgDOM_elements_editable))

@@ -119,6 +119,7 @@ Informing the system about available functions
 ------------------------------------------------------------------------- */
 
 		$this->functions['add_messages'] = true;
+		$this->functions['delete'] = false;
 		$this->functions['get_message'] = true;
 		$this->functions['get_messages_since_date'] = true;
 		$this->functions['remove_messages'] = true;
@@ -148,6 +149,23 @@ Set up additional settings
 	{
 		if (USE_debug_reporting) { direct_debug (8,"sWG/#echo(__FILEPATH__)# -account_pms_box->add_messages ($f_count,+f_update)- (#echo(__LINE__)#)"); }
 		return /*#ifdef(DEBUG):direct_debug (9,"sWG/#echo(__FILEPATH__)# -account_pms_box->add_messages ()- (#echo(__LINE__)#)",(:#*/$this->add_objects ($f_count,$f_update)/*#ifdef(DEBUG):),true):#*/;
+	}
+
+	//f// direct_account_pms_box->delete ($f_link_data = true,$f_data = true)
+/**
+	* Delete the object from the database.
+	*
+	* @param  boolean $f_link_data Delete *_datalinker if true
+	* @param  boolean $f_data Delete *_datalinkerd if true
+	* @uses   direct_debug()
+	* @uses   USE_debug_reporting
+	* @return boolean Always false; TODO: Code me
+	* @since  v0.1.00
+*/
+	public function delete ($f_link_data = true,$f_data = true)
+	{
+		if (USE_debug_reporting) { direct_debug (3,"sWG/#echo(__FILEPATH__)# -account_pms_box->delete (+f_link_data,+f_data)- (#echo(__LINE__)#)"); }
+		return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -account_pms_box->delete ()- (#echo(__LINE__)#)",:#*/false/*#ifdef(DEBUG):,true):#*/;
 	}
 
 	//f// direct_account_pms_box->get ($f_bid = "",$f_uid = NULL,$f_load = true)
