@@ -45,7 +45,6 @@ NOTE_END //n*/
 * @copyright  (C) direct Netware Group - All rights reserved
 * @package    sWG
 * @subpackage account_pms
-* @uses       direct_product_iversion
 * @since      v0.1.00
 * @license    http://www.direct-netware.de/redirect.php?licenses;gpl
 *             GNU General Public License 2
@@ -56,91 +55,74 @@ All comments will be removed in the "production" packages (they will be in
 all development packets)
 ------------------------------------------------------------------------- */
 
-//j// Basic configuration
-
-/* -------------------------------------------------------------------------
-Direct calls will be honored with an "exit ()"
-------------------------------------------------------------------------- */
-
-if (!defined ("direct_product_iversion")) { exit (); }
-
 //j// Functions and classes
 
-//f// direct_output_oset_account_pms_box ()
 /**
 * direct_output_oset_account_pms_box ()
 *
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
 * @return string Valid XHTML code
 * @since  v0.1.00
 */
 function direct_output_oset_account_pms_box ()
 {
-	global $direct_cachedata,$direct_settings;
+	global $direct_cachedata,$direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_output_oset_account_pms_box ()- (#echo(__LINE__)#)"); }
 
-	$f_return = "<p class='pagecontenttitle'>{$direct_cachedata['output_box_name']}</p>\n<p class='pagecontent' style='text-align:center'>".(direct_local_get ("account_pms_quota")).": <span style='font-weight:bold'>{$direct_cachedata['output_pms_counter']}</span> ({$direct_cachedata['output_pms_quota_percentage']})</p>";
+	$f_return = "<h1 class='pagecontenttitle{$direct_settings['theme_css_corners']}'>{$direct_cachedata['output_box_name']}</h1>\n<p class='pagehighlightborder{$direct_settings['theme_css_corners']} pageextrabg pageextracontent' style='text-align:center'>".(direct_local_get ("account_pms_quota")).": <strong>{$direct_cachedata['output_pms_counter']}</strong> ({$direct_cachedata['output_pms_quota_percentage']})</p>";
 
-	if (empty ($direct_cachedata['output_pms_messages'])) { $f_return .= (($direct_cachedata['output_box'] == "out") ? "<p class='pagecontent' style='font-weight:bold'>".(direct_local_get ("account_pms_box_out_list_empty"))."</p>" : "<p class='pagecontent' style='font-weight:bold'>".(direct_local_get ("account_pms_box_in_list_empty"))."</p>"); }
+	if (empty ($direct_cachedata['output_pms_messages'])) { $f_return .= "<p class='pagecontent'><strong>".(($direct_cachedata['output_box'] == "out") ? direct_local_get ("account_pms_box_out_list_empty") : direct_local_get ("account_pms_box_in_list_empty"))."</strong></p>"; }
 	else
 	{
-		if ($direct_cachedata['output_pages'] > 1) { $f_return .= "<p class='pageborder2' style='text-align:center'><span class='pageextracontent' style='font-size:10px'>".(direct_output_pages_generator ($direct_cachedata['output_page_url'],$direct_cachedata['output_pages'],$direct_cachedata['output_page']))."</span></p>"; }
+		if ($direct_cachedata['output_pages'] > 1) { $f_return .= "<p class='pageborder{$direct_settings['theme_css_corners']} pageextrabg pageextracontent' style='text-align:center;font-size:10px'>".($direct_globals['output']->pages_generator ($direct_cachedata['output_page_url'],$direct_cachedata['output_pages'],$direct_cachedata['output_page']))."</p>"; }
 
-$f_return .= ("\n<table class='pageborder1' style='width:100%'>
+$f_return .= ("\n<table class='pagetable' style='width:100%'>
 <thead><tr>
-<td class='pagetitlecellbg' style='width:50%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_title"))."</span></td>");
-
-		$f_return .= (($direct_cachedata['output_box'] == "out") ? "\n<td class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_to"))."</span></td>" : "\n<td class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent'>".(direct_local_get ("account_pms_from"))."</span></td>");
-
-$f_return .= ("\n<td class='pagetitlecellbg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagetitlecellcontent' style='font-size:10px'>".(direct_local_get ("account_pms_time"))."</span></td>
+<td class='pagetitlecell' style='width:50%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'>".(direct_local_get ("account_pms_title"))."</td>
+<td valign='middle' align='center' class='pagetitlecell' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'>".(($direct_cachedata['output_box'] == "out") ? direct_local_get ("account_pms_to") : direct_local_get ("account_pms_from"))."</td>
+<td class='pagetitlecell' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'>".(direct_local_get ("account_pms_time"))."</td>
 </tr></thead><tbody>");
 
 		foreach ($direct_cachedata['output_pms_messages'] as $f_message_array)
 		{
-			$f_return .= "<tr>\n<td class='pagebg' style='width:50%;padding:$direct_settings[theme_td_padding];text-align:left;vertical-align:middle'><span class='pagecontent' style='font-weight:bold'>";
+			$f_return .= "<tr>\n<td class='pagebg pagecontent' style='width:50%;padding:$direct_settings[theme_td_padding];text-align:left;vertical-align:middle'><strong>";
+			if (($direct_cachedata['output_box'] == "in")&&(!$f_message_array['read'])) { $f_return .= "<img src='".(direct_linker_dynamic ("url0","s=cache;dsd=dfile+$direct_settings[path_themes]/$direct_settings[theme]/status_message_new.png",true,false))."' border='0' alt='".(direct_local_get ("account_pms_unread"))."' title='".(direct_local_get ("account_pms_unread"))."' style='float:right' />"; }
 
-			if (($direct_cachedata['output_box'] == "in")&&(!$f_message_array['read'])) { $f_return .= "<img src='".(direct_linker_dynamic ("url0","s=cache&dsd=dfile+$direct_settings[path_themes]/$direct_settings[theme]/status_message_new.png",true,false))."' border='0' alt='".(direct_local_get ("account_pms_unread"))."' title='".(direct_local_get ("account_pms_unread"))."' style='float:right' />"; }
+$f_return .= ("<a href=\"".(direct_linker ("url0",$f_message_array['pageurl']))."\" target='_self'>{$f_message_array['title']}</a></strong></td>
+<td class='pageextrabg pageextracontent' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'>");
 
-$f_return .= ("<a href=\"{$f_message_array['pageurl']}\" target='_self'>{$f_message_array['title']}</a></span></td>
-<td class='pageextrabg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pageextracontent'>");
+			$f_return .= ($f_message_array['userpageurl'] ? "<a href=\"".(direct_linker ("url0",$f_message_array['userpageurl']))."\" target='_self'>{$f_message_array['username']}</a>" : $f_message_array['username']);
 
-			$f_return .= ($f_message_array['userpageurl'] ? "<a href=\"{$f_message_array['userpageurl']}\" target='_self'>{$f_message_array['username']}</a>" : $f_message_array['username']);
-
-$f_return .= ("</span></td>
-<td class='pagebg' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'><span class='pagecontent'>{$f_message_array['time']}</span></td>
+$f_return .= ("</td>
+<td class='pagebg pagecontent' style='width:25%;padding:$direct_settings[theme_td_padding];text-align:center;vertical-align:middle'>".($direct_globals['basic_functions']->datetime ("shortdate&time",$f_message_array['time'],$direct_settings['user']['timezone'],(direct_local_get ("datetime_dtconnect"))))."</td>
 </tr>");
 		}
 
 		$f_return .= "</tbody>\n</table>";
-		if ($direct_cachedata['output_pages'] > 1) { $f_return .= "\n<p class='pageborder2' style='text-align:center'><span class='pageextracontent' style='font-size:10px'>".(direct_output_pages_generator ($direct_cachedata['output_page_url'],$direct_cachedata['output_pages'],$direct_cachedata['output_page']))."</span></p>"; }
+		if ($direct_cachedata['output_pages'] > 1) { $f_return .= "\n<p class='pageborder{$direct_settings['theme_css_corners']} pageextrabg pageextracontent' style='text-align:center;font-size:10px'>".($direct_globals['output']->pages_generator ($direct_cachedata['output_page_url'],$direct_cachedata['output_pages'],$direct_cachedata['output_page']))."</p>"; }
 	}
 
 	return $f_return;
 }
 
-//f// direct_output_oset_account_pms_view ()
 /**
 * direct_output_oset_account_pms_view ()
 *
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
 * @return string Valid XHTML code
 * @since  v0.1.00
 */
 function direct_output_oset_account_pms_view ()
 {
-	global $direct_cachedata,$direct_classes,$direct_settings;
+	global $direct_cachedata,$direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_output_oset_account_pms_view ()- (#echo(__LINE__)#)"); }
 
-	$direct_classes['basic_functions']->require_file ($direct_settings['path_system']."/osets/$direct_settings[theme_oset]/swgi_account_profile.php");
+	$direct_globals['basic_functions']->requireFile ($direct_settings['path_system']."/osets/$direct_settings[theme_oset]/swgi_account_profile.php");
 	$f_userdata_type = (($direct_cachedata['output_message']['type'] == "out") ? direct_local_get ("account_pms_to") : direct_local_get ("account_pms_from"));
 
-$f_return = ("<p class='pagecontenttitle'>{$direct_cachedata['output_message']['title']}</p>
-<p class='pageborder2' style='text-align:left'><span class='pagecontent'>{$direct_cachedata['output_message']['text']}</span></p>
-<table class='pageborder1' style='width:100%'>
+$f_return = ("<h1 class='pagecontenttitle{$direct_settings['theme_css_corners']}'>{$direct_cachedata['output_message']['title']}</h1>
+<p class='pageborder{$direct_settings['theme_css_corners']} pageextrabg pageextracontent' style='text-align:left'>{$direct_cachedata['output_message']['text']}</p>
+<table class='pagetable' style='width:100%'>
 <thead><tr>
-<td class='pagetitlecellbg' style='padding:$direct_settings[theme_td_padding];text-align:left'><span class='pagetitlecellcontent'>$f_userdata_type</span></td>
+<td class='pagetitlecell' style='padding:$direct_settings[theme_td_padding];text-align:left'>$f_userdata_type</td>
 </tr></thead><tbody><tr>
 <td class='pageextrabg' style='padding:$direct_settings[theme_td_padding];text-align:left'>".(direct_account_oset_parse_user_fullh ($direct_cachedata['output_message'],"page","","","user"))."</td>
 </tr>");
@@ -157,6 +139,7 @@ $f_return .= ("<tr>
 
 //j// Script specific commands
 
+$direct_settings['theme_css_corners'] = (isset ($direct_settings['theme_css_corners_class']) ? " ".$direct_settings['theme_css_corners_class'] : " ui-corner-all");
 if (!isset ($direct_settings['theme_td_padding'])) { $direct_settings['theme_td_padding'] = "5px"; }
 
 //j// EOF

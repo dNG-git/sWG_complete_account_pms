@@ -45,7 +45,6 @@ NOTE_END //n*/
 * @copyright  (C) direct Netware Group - All rights reserved
 * @package    sWG
 * @subpackage account
-* @uses       direct_product_iversion
 * @since      v0.1.00
 * @license    http://www.direct-netware.de/redirect.php?licenses;gpl
 *             GNU General Public License 2
@@ -66,7 +65,6 @@ if (!defined ("direct_product_iversion")) { exit (); }
 
 //j// Functions and classes
 
-//f// direct_mods_account_profile_pms_via_email_edit ($f_data)
 /**
 * Modification function called by:
 * m = account
@@ -74,42 +72,23 @@ if (!defined ("direct_product_iversion")) { exit (); }
 * a = edit
 *
 * @param  array $f_data Array containing call specific data.
-* @uses   direct_basic_functions::inputfilter_number()
-* @uses   direct_debug()
-* @uses   direct_formbuilder::entry_add()
-* @uses   direct_formbuilder::entry_add_select()
-* @uses   direct_local_get()
-* @uses   USE_debug_reporting
 * @return boolean True on success
 * @since  v0.1.00
 */
 function direct_mods_account_profile_pms_via_email_edit ($f_data)
 {
-	global $direct_cachedata,$direct_classes,$direct_settings;
+	global $direct_cachedata,$direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit (+f_data)- (#echo(__LINE__)#)"); }
 
-	if (isset ($f_data[1]))
-	{
-		$f_continue_check = $direct_settings['account_mods_profile_pms_via_email'];
-		$f_return = true;
-	}
-	else
-	{
-		$f_continue_check = false;
-		$f_return = false;
-	}
-
-	if ($f_continue_check)
+	if ($direct_globals['basic_functions']->settingsGet ($direct_settings['path_data']."/settings/swg_account_pms.php")&&($direct_settings['account_mods_profile_pms_via_email']))
 	{
 		$direct_cachedata['i_apms_via_email'] = ($f_data[1]['ddbusers_pms_via_email'] ? "<evars><no><value value='0' /><text><![CDATA[".(direct_local_get ("core_no"))."]]></text></no><yes><value value='1' /><selected value='1' /><text><![CDATA[".(direct_local_get ("core_yes"))."]]></text></yes></evars>" : "<evars><no><value value='0' /><selected value='1' /><text><![CDATA[".(direct_local_get ("core_no"))."]]></text></no><yes><value value='1' /><text><![CDATA[".(direct_local_get ("core_yes"))."]]></text></yes></evars>");
-		$direct_classes['formbuilder']->entry_add ("subtitle","pms_setting",(direct_local_get ("account_pms_setting")));
-		$direct_classes['formbuilder']->entry_add_select ("apms_via_email",(direct_local_get ("account_pms_via_email")),false,"s");
+		$direct_globals['formbuilder']->entryAddSelect (array ("section" => (direct_local_get ("account_pms_setting")),"name" => "apms_via_email","title" => (direct_local_get ("account_pms_via_email"))));
 	}
 
-	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
+	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit ()- (#echo(__LINE__)#)",:#*/true/*#ifdef(DEBUG):,true):#*/;
 }
 
-//f// direct_mods_account_profile_pms_via_email_edit_check ($f_data)
 /**
 * Modification function called by:
 * m = account
@@ -117,33 +96,25 @@ function direct_mods_account_profile_pms_via_email_edit ($f_data)
 * a = edit-save
 *
 * @param  array $f_data Array containing call specific data.
-* @uses   direct_basic_functions::inputfilter_number()
-* @uses   direct_debug()
-* @uses   direct_formbuilder::entry_add()
-* @uses   direct_formbuilder::entry_add_select()
-* @uses   direct_local_get()
-* @uses   USE_debug_reporting
 * @return boolean Always true
 * @since  v0.1.00
 */
 function direct_mods_account_profile_pms_via_email_edit_check ($f_data)
 {
-	global $direct_cachedata,$direct_classes,$direct_settings;
+	global $direct_cachedata,$direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit_check (+f_data)- (#echo(__LINE__)#)"); }
 
-	if ($direct_settings['account_mods_profile_pms_via_email'])
+	if (($direct_globals['basic_functions']->settingsGet ($direct_settings['path_data']."/settings/swg_account_pms.php"))&&($direct_settings['account_mods_profile_pms_via_email']))
 	{
-		$direct_cachedata['i_apms_via_email'] = (isset ($GLOBALS['i_apms_via_email']) ? (str_replace ("'","",$GLOBALS['i_apms_via_email'])) : "");
+		$direct_cachedata['i_apms_via_email'] = (isset ($GLOBALS['i_apms_via_email']) ? (str_replace ("'","",$GLOBALS['i_apms_via_email'])) : $f_data[1]['ddbusers_pms_via_email']);
 		$direct_cachedata['i_apms_via_email'] = str_replace ("<value value='$direct_cachedata[i_apms_via_email]' />","<value value='$direct_cachedata[i_apms_via_email]' /><selected value='1' />","<evars><no><value value='0' /><text><![CDATA[".(direct_local_get ("core_no"))."]]></text></no><yes><value value='1' /><text><![CDATA[".(direct_local_get ("core_yes"))."]]></text></yes></evars>");
 
-		$direct_classes['formbuilder']->entry_add ("subtitle","pms_setting",(direct_local_get ("account_pms_setting")));
-		$direct_classes['formbuilder']->entry_add_select ("apms_via_email",(direct_local_get ("account_pms_via_email")),true,"s");
+		$direct_globals['formbuilder']->entryAddSelect (array ("section" => (direct_local_get ("account_pms_setting")),"name" => "apms_via_email","title" => (direct_local_get ("account_pms_via_email"))));
 	}
 
 	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit_check ()- (#echo(__LINE__)#)",:#*/true/*#ifdef(DEBUG):,true):#*/;
 }
 
-//f// direct_mods_account_profile_pms_via_email_edit_save ($f_data)
 /**
 * Modification function called by:
 * m = account
@@ -151,8 +122,6 @@ function direct_mods_account_profile_pms_via_email_edit_check ($f_data)
 * a = edit-save
 *
 * @param  array $f_data Array containing call specific data.
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
 * @return mixed Input based, edited user array or NULL on error
 * @since  v0.1.00
 */
@@ -163,7 +132,7 @@ function direct_mods_account_profile_pms_via_email_edit_save ($f_data)
 
 	if (isset ($f_data[1]))
 	{
-		$f_continue_check = $direct_settings['account_mods_profile_pms_via_email'];
+		$f_continue_check = ($direct_globals['basic_functions']->settingsGet ($direct_settings['path_data']."/settings/swg_account_pms.php") ? $direct_settings['account_mods_profile_pms_via_email'] : false);
 		$f_return = $f_data[1];
 	}
 	else
@@ -176,25 +145,19 @@ function direct_mods_account_profile_pms_via_email_edit_save ($f_data)
 	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit_save ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
 }
 
-//f// direct_mods_account_profile_pms_via_email_view ($f_data)
 /**
-* Modification function called by:
-* m = account
-* s = profile
-* a = view
+* direct_mods_account_profile_pms_via_email_edit_saved ($f_data)
 *
 * @param  array $f_data Array containing call specific data.
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
-* @return array List of modifications to view in the output
+* @return mixed Input based, edited user array or NULL on error
 * @since  v0.1.00
 */
-function direct_mods_account_profile_pms_via_email_view ($f_data)
+function direct_mods_account_profile_pms_via_email_edit_saved ($f_data)
 {
-	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_view (+f_data)- (#echo(__LINE__)#)"); }
+	if (isset ($f_data[0])) { $f_return = $f_data[0]; }
+	else { $f_return = array (); }
 
-	$f_return = ((is_array ($f_data[0])) ? $f_data[0] : array ());
-	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_profile_pms_via_email_edit_view ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
+	return $f_return;
 }
 
 //j// Script specific commands

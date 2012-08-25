@@ -45,7 +45,6 @@ NOTE_END //n*/
 * @copyright  (C) direct Netware Group - All rights reserved
 * @package    sWG
 * @subpackage account_pms
-* @uses       direct_product_iversion
 * @since      v0.1.00
 * @license    http://www.direct-netware.de/redirect.php?licenses;gpl
 *             GNU General Public License 2
@@ -56,22 +55,11 @@ All comments will be removed in the "production" packages (they will be in
 all development packets)
 ------------------------------------------------------------------------- */
 
-//j// Basic configuration
-
-/* -------------------------------------------------------------------------
-Direct calls will be honored with an "exit ()"
-------------------------------------------------------------------------- */
-
-if (!defined ("direct_product_iversion")) { exit (); }
-
 //j// Functions and classes
 
-//f// direct_output_oset_account_pms_embedded_ajax_status ()
 /**
 * direct_output_oset_account_pms_embedded_ajax_status ()
 *
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
 * @return string Valid XHTML code
 * @since  v0.1.00
 */
@@ -84,21 +72,59 @@ function direct_output_oset_account_pms_embedded_ajax_status ()
 
 	if ($direct_cachedata['output_account_status_and_pms_logged_in'])
 	{
-		$f_return .= "<span style='font-weight:bold'>".(direct_local_get ("core_userbox_member_1"))."<a href='".(direct_linker ("url0","m=account"))."' target='_self'>".$direct_cachedata['output_account_status_and_pms_username']."</a>".(direct_local_get ("core_userbox_member_2"))."</span>";
+		$f_return .= "<b>".(direct_local_get ("core_userbox_member_1"))."<a href='".(direct_linker ("url0","m=account"))."' target='_self'>".$direct_cachedata['output_account_status_and_pms_username']."</a>".(direct_local_get ("core_userbox_member_2"))."</b>";
 
 		if ($direct_cachedata['output_account_status_and_pms_unread_include'])
 		{
 $f_return .= ("<br />
-$direct_cachedata[output_account_status_and_pms_unread_text] <span style='font-size:10px'>($direct_cachedata[output_last_update])</span>");
+$direct_cachedata[output_account_status_and_pms_unread_text] <span style='font-size:10px;white-space:nowrap'>($direct_cachedata[output_last_update])</span>");
+		}
+	}
+	elseif ($direct_settings['account_registration']) { $f_return .= ((direct_local_get ("core_userbox_guest_1_1"))."<a href='".(direct_linker ("url0","m=account;s=status;a=login"))."' target='_self'>".(direct_local_get ("core_userbox_guest_1_2"))."</a>".(direct_local_get ("core_userbox_guest_1_3"))."<a href='".(direct_linker ("url0","m=account;s=registration"))."' target='_self'>".(direct_local_get ("core_userbox_guest_1_4"))."</a>".(direct_local_get ("core_userbox_guest_1_5"))); }
+	else { $f_return .= ((direct_local_get ("core_userbox_guest_2_1"))."<a href='".(direct_linker ("url0","m=account;s=status;a=login"))."' target='_self'>".(direct_local_get ("core_userbox_guest_2_2"))."</a>".direct_local_get ("core_userbox_guest_2_3")); }
+
+	$f_return .= "</span>";
+
+	return $f_return;
+}
+
+/**
+* direct_output_oset_account_pms_embedded_block_status ()
+*
+* @return string Valid XHTML code
+* @since  v0.1.00
+*/
+function direct_output_oset_account_pms_embedded_block_status ()
+{
+	global $direct_cachedata,$direct_settings;
+	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_output_oset_account_pms_embedded_block_status ()- (#echo(__LINE__)#)"); }
+
+	$f_return = "<span id='swgAJAX_blocks_account_status_and_pms_point'>";
+
+	if ($direct_cachedata['output_account_status_and_pms_logged_in'])
+	{
+		$f_return .= "<b>".(direct_local_get ("core_userbox_member_1"))."<a href='".(direct_linker ("url0","m=account"))."' target='_self'>".$direct_cachedata['output_account_status_and_pms_username']."</a>".(direct_local_get ("core_userbox_member_2"))."</b>";
+
+		if ($direct_cachedata['output_account_status_and_pms_unread_include'])
+		{
+			$f_embedded_code = "<span><br />".(direct_local_get ("core_loading","text"))."</span>";
+
+$f_return .= ((isset ($direct_settings['swg_clientsupport']['JSDOMManipulation']) ? ($f_embedded_code."<script type='text/javascript'><![CDATA[
+jQuery (function () { djs_load_functions({ file:'swg_AJAX.php.js',block:'djs_swgAJAX_replace' }).done (function () { djs_swgAJAX_replace ({ id:'swgAJAX_blocks_account_status_and_pms_point',url0:'ajax_content;m=account;s=pms;a=status_and_pms' }); }); });") : ("<script type='text/javascript'><![CDATA[
+jQuery (function () { djs_load_functions({ file:'swg_AJAX.php.js',block:'djs_swgAJAX_replace' }).done (function () { djs_DOM_insert_append ({ data:\"".(str_replace ('"','\"',$f_embedded_code))."\",id:'swgAJAX_blocks_account_status_and_pms_point',onInserted:{ func:'djs_swgAJAX_replace',params: { id:'swgAJAX_blocks_account_status_and_pms_point',url0:'ajax_content;m=account;s=pms;a=status_and_pms' } } }); }); });"))."
+self.setInterval (\"djs_swgAJAX_replace ({ id:'swgAJAX_blocks_account_status_and_pms_point',url0:'ajax_content;m=account;s=pms;a=status_and_pms' })\",30000);
+]]></script>");
 		}
 	}
 	else
 	{
-		if ($direct_settings['account_registration']) { $f_return .= ((direct_local_get ("core_userbox_guest_1_1"))."<a href='".(direct_linker ("url0","m=account&s=status&a=login"))."' target='_self'>".(direct_local_get ("core_userbox_guest_1_2"))."</a>".(direct_local_get ("core_userbox_guest_1_3"))."<a href='".(direct_linker ("url0","m=account&s=registration"))."' target='_self'>".(direct_local_get ("core_userbox_guest_1_4"))."</a>".(direct_local_get ("core_userbox_guest_1_5"))); }
-		else { $f_return .= ((direct_local_get ("core_userbox_guest_2_1"))."<a href='".(direct_linker ("url0","m=account&s=status&a=login"))."' target='_self'>".(direct_local_get ("core_userbox_guest_2_2"))."</a>".direct_local_get ("core_userbox_guest_2_3")); }
+		if ($direct_settings['account_registration']) { $f_return .= ((direct_local_get ("core_userbox_guest_1_1"))."<a href='".(direct_linker ("url0","m=account;s=status;a=login"))."' target='_self'>".(direct_local_get ("core_userbox_guest_1_2"))."</a>".(direct_local_get ("core_userbox_guest_1_3"))."<a href='".(direct_linker ("url0","m=account;s=registration"))."' target='_self'>".(direct_local_get ("core_userbox_guest_1_4"))."</a>".(direct_local_get ("core_userbox_guest_1_5"))); }
+		else { $f_return .= ((direct_local_get ("core_userbox_guest_2_1"))."<a href='".(direct_linker ("url0","m=account;s=status;a=login"))."' target='_self'>".(direct_local_get ("core_userbox_guest_2_2"))."</a>".direct_local_get ("core_userbox_guest_2_3")); }
 	}
 
-	return $f_return."</span>";
+	$f_return .= "</span>";
+
+	return $f_return;
 }
 
 //j// EOF

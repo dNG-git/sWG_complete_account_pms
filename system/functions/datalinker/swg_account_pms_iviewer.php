@@ -46,11 +46,14 @@ NOTE_END //n*/
 * @copyright  (C) direct Netware Group - All rights reserved
 * @package    sWG
 * @subpackage account
-* @uses       direct_product_iversion
 * @since      v0.1.00
 * @license    http://www.direct-netware.de/redirect.php?licenses;gpl
 *             GNU General Public License 2
 */
+
+/*#use(direct_use) */
+use dNG\sWG\dhandler\directPMSBox;
+/* #\n*/
 
 /* -------------------------------------------------------------------------
 All comments will be removed in the "production" packages (they will be in
@@ -59,32 +62,25 @@ all development packets)
 
 //j// Functions and classes
 
-//f// direct_datalinker_account_pms_iviewer ($f_viewer_data,&$f_object)
 /**
 * This iviewer is responsible for PMS objects. It will check the read rights
 * and return standardized values.
 *
 * @param  array $f_viewer_data Found iviewer entry
 * @param  direct_datalinker &$f_object DataLinker object
-* @uses   direct_basic_functions::include_file()
-* @uses   direct_datalinker_account_pms()
-* @uses   direct_datalinker_account_pms_iviewer_box()
-* @uses   direct_datalinker_account_pms_iviewer_message()
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
 * @return array Parsed entry (ready for output)
 * @since  v0.1.00
 */
 function direct_datalinker_account_pms_iviewer ($f_viewer_data,&$f_object)
 {
-	global $direct_classes,$direct_settings;
+	global $direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_datalinker_account_pms_iviewer (+f_viewer_data,+f_object)- (#echo(__LINE__)#)"); }
 
 	$f_return = array ();
 
 	if (isset ($f_viewer_data['handler']))
 	{
-		if ($direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/functions/datalinker/swg_account_pms.php")) { $f_object_iview =& direct_datalinker_account_pms ($f_object,false); }
+		if ($direct_globals['basic_functions']->includeFile ($direct_settings['path_system']."/functions/datalinker/swg_account_pms.php")) { $f_object_iview =& direct_datalinker_account_pms ($f_object,false); }
 		else { $f_object_iview = NULL; }
 
 		if ($f_object_iview)
@@ -108,26 +104,17 @@ function direct_datalinker_account_pms_iviewer ($f_viewer_data,&$f_object)
 	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_datalinker_account_pms_iviewer ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
 }
 
-//f// direct_datalinker_account_pms_iviewer_box ($f_viewer_data,&$f_object)
 /**
-* iviewer for direct_account_pms_box objects.
+* iviewer for directPMSBox objects.
 *
 * @param  array $f_viewer_data Found iviewer entry
 * @param  direct_datalinker &$f_object DataLinker object
-* @uses   direct_basic_functions::include_file()
-* @uses   direct_account_pms_box::get()
-* @uses   direct_account_pms_box::parse()
-* @uses   direct_debug()
-* @uses   direct_linker()
-* @uses   direct_local_get()
-* @uses   direct_local_integration()
-* @uses   USE_debug_reporting
 * @return array Parsed entry (ready for output)
 * @since  v0.1.00
 */
 function direct_datalinker_account_pms_iviewer_box ($f_viewer_data,&$f_object)
 {
-	global $direct_classes,$direct_settings;
+	global $direct_cachedata,$direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_datalinker_account_pms_iviewer_box (+f_viewer_data,+f_object)- (#echo(__LINE__)#)"); }
 
 	direct_local_integration ("account_pms");
@@ -144,9 +131,9 @@ $f_return = array (
 "object_last_useravatar" => "",
 "object_preview" => "",
 "object_content" => "",
-"object_last_time" => "",
 "object_url" => "",
 "object_available" => false,
+"object_readable_by_everyone" => false,
 "object_view_url" => "",
 "object_extended_available" => false,
 "object_new" => false
@@ -160,7 +147,7 @@ $f_return = array (
 
 		if (is_array ($f_object_array))
 		{
-			$f_parent_object = new direct_account_pms_box ();
+			$f_parent_object = new directPMSBox ();
 
 			if (($f_object_array['ddbdatalinker_id_parent'])&&(strpos ($f_object_array['ddbdatalinker_id_parent'],"-") === false))
 			{
@@ -178,8 +165,8 @@ $f_return = array (
 
 			if (($direct_settings['datalinker_datacenter_symbols'])&&($f_viewer_data['symbol']))
 			{
-				$f_symbol_path = $direct_classes['basic_functions']->varfilter ($direct_settings['datalinker_datacenter_path_symbols'],"settings");
-				$f_return['object_symbol'] = direct_linker_dynamic ("url0","s=cache&dsd=dfile+".$f_symbol_path.$f_viewer_data['symbol']);
+				$f_symbol_path = $direct_globals['basic_functions']->varfilter ($direct_settings['datalinker_datacenter_path_symbols'],"settings");
+				$f_return['object_symbol'] = direct_linker_dynamic ("url0","s=cache;dsd=dfile+".$f_symbol_path.$f_viewer_data['symbol']);
 			}
 
 			$f_return['object_desc'] = "";
@@ -203,30 +190,17 @@ $f_return = array (
 	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_datalinker_account_pms_iviewer_cat ()- (#echo(__LINE__)#)",:#*/$f_return/*#ifdef(DEBUG):,true):#*/;
 }
 
-//f// direct_datalinker_account_pms_iviewer_message ($f_viewer_data,&$f_object)
 /**
 * iviewer for direct_account_pms_message objects.
 *
 * @param  array $f_viewer_data Found iviewer entry
 * @param  direct_datalinker &$f_object DataLinker object
-* @uses   direct_basic_functions::include_file()
-* @uses   direct_class_init()
-* @uses   direct_account_pms_box::get()
-* @uses   direct_account_pms_message::get()
-* @uses   direct_account_pms_message::parse()
-* @uses   direct_debug()
-* @uses   direct_formtags::cleanup()
-* @uses   direct_html_encode_special()
-* @uses   direct_linker()
-* @uses   direct_local_get()
-* @uses   direct_local_integration()
-* @uses   USE_debug_reporting
 * @return array Parsed entry (ready for output)
 * @since  v0.1.00
 */
 function direct_datalinker_account_pms_iviewer_message ($f_viewer_data,&$f_object)
 {
-	global $direct_classes,$direct_settings;
+	global $direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_datalinker_account_pms_iviewer_message (+f_viewer_data,+f_object)- (#echo(__LINE__)#)"); }
 
 	direct_local_integration ("account_pms");
@@ -243,9 +217,9 @@ $f_return = array (
 "object_last_useravatar" => "",
 "object_preview" => "",
 "object_content" => "",
-"object_last_time" => "",
 "object_url" => "",
 "object_available" => false,
+"object_readable_by_everyone" => false,
 "object_view_url" => "",
 "object_extended_available" => false,
 "object_new" => false
@@ -253,9 +227,8 @@ $f_return = array (
 
 	if (isset ($f_viewer_data['handler']))
 	{
-		$f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_box.php");
-		if ((!defined ("CLASS_direct_formtags"))&&($f_continue_check)) { $f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/swg_formtags.php"); }
-		if ((!isset ($direct_classes['formtags']))&&($f_continue_check)) { $f_continue_check = direct_class_init ("formtags"); }
+		$f_continue_check = (isset ($direct_globals['@names']['formtags']) ? true : $direct_globals['basic_functions']->includeClass ('dNG\sWG\directFormtags',2));
+		if ((!isset ($direct_globals['formtags']))&&($f_continue_check)) { $f_continue_check = direct_class_init ("formtags"); }
 
 		$f_box_array = NULL;
 		$f_message_array = ($f_continue_check ? $f_object->get ("",false) : NULL);
@@ -263,7 +236,7 @@ $f_return = array (
 
 		if (is_array ($f_message_array))
 		{
-			$f_box_object = new direct_account_pms_box ();
+			$f_box_object = new directPMSBox ();
 
 			if ($f_message_array['ddbdatalinker_id_main'])
 			{
@@ -275,15 +248,15 @@ $f_return = array (
 		if ((($f_subs_check)||(!is_array ($f_box_array)))&&(!is_array ($f_message_array))) { $f_return['object_desc'] = direct_local_get ("errors_account_pms_mid_invalid"); }
 		else
 		{
-			$f_parsed_array = $f_object->parse ("m=account&s=pms&a=[a]&dsd=[oid][page]");
+			$f_parsed_array = $f_object->parse ("m=account;s=pms;a=[a];dsd=[oid][page]");
 
 			$f_return['object_id'] = $f_parsed_array['oid'];
 			$f_return['object_title'] = $f_parsed_array['title'];
 
 			if (($direct_settings['datalinker_datacenter_symbols'])&&($f_viewer_data['symbol']))
 			{
-				$f_symbol_path = $direct_classes['basic_functions']->varfilter ($direct_settings['datalinker_datacenter_path_symbols'],"settings");
-				$f_return['object_symbol'] = direct_linker_dynamic ("url0","s=cache&dsd=dfile+".$f_symbol_path.$f_viewer_data['symbol']);
+				$f_symbol_path = $direct_globals['basic_functions']->varfilter ($direct_settings['datalinker_datacenter_path_symbols'],"settings");
+				$f_return['object_symbol'] = direct_linker_dynamic ("url0","s=cache;dsd=dfile+".$f_symbol_path.$f_viewer_data['symbol']);
 			}
 
 			$f_return['object_desc'] = "";
@@ -291,7 +264,8 @@ $f_return = array (
 			$f_return['object_last_userpageurl'] = $f_parsed_array['userpageurl'];
 			$f_return['object_last_useravatar'] = $f_parsed_array['useravatar_small'];
 			$f_return['object_content'] = "";
-			$f_return['object_last_time'] = $f_parsed_array['time'];
+			$f_return['object_time'] = $f_message_array['ddbdatalinker_sorting_date'];
+			$f_return['object_last_time'] = $f_message_array['ddbdatalinker_sorting_date'];
 			$f_return['object_url'] = $f_parsed_array['pageurl'];
 			$f_return['object_available'] = true;
 			$f_return['object_new'] = ($f_parsed_array['read'] ? false : true);

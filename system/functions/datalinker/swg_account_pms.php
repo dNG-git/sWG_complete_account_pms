@@ -45,11 +45,15 @@ NOTE_END //n*/
 * @copyright  (C) direct Netware Group - All rights reserved
 * @package    sWG
 * @subpackage account
-* @uses       direct_product_iversion
 * @since      v0.1.00
 * @license    http://www.direct-netware.de/redirect.php?licenses;gpl
 *             GNU General Public License 2
 */
+
+/*#use(direct_use) */
+use dNG\sWG\dhandler\directPMSBox,
+    dNG\sWG\dhandler\directPMSMessage;
+/* #\n*/
 
 /* -------------------------------------------------------------------------
 All comments will be removed in the "production" packages (they will be in
@@ -58,37 +62,24 @@ all development packets)
 
 //j// Basic configuration
 
-/* -------------------------------------------------------------------------
-Direct calls will be honored with an "exit ()"
-------------------------------------------------------------------------- */
-
-if (!defined ("direct_product_iversion")) { exit (); }
-
-//f// direct_datalinker_account_pms (&$f_object,$f_message_content = true)
 /**
 * Returns the object for the requested DataLinker type.
 *
 * @param  direct_datalinker &$f_object DataLinker object
 * @param  boolean $f_message_content True to load ddbdata_data for a message
-* @uses   direct_basic_functions::include_file()
-* @uses   direct_basic_functions::settings_get()
-* @uses   direct_debug()
-* @uses   direct_account_pms_box::get()
-* @uses   direct_account_pms_message::get()
-* @uses   USE_debug_reporting
 * @return mixed Object on success; false on error
 * @since  v0.1.00
 */
 function &direct_datalinker_account_pms (&$f_object,$f_message_content = true)
 {
-	global $direct_classes,$direct_settings;
+	global $direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_datalinker_account_pms (+f_object,+f_message_content)- (#echo(__LINE__)#)"); }
 
 	$f_return = false;
 
 	if (is_object ($f_object))
 	{
-		$f_object_array = (($direct_classes['basic_functions']->settings_get ($direct_settings['path_data']."/settings/swg_account.php")) ? $f_object->get () : NULL);
+		$f_object_array = (($direct_globals['basic_functions']->settingsGet ($direct_settings['path_data']."/settings/swg_account.php")) ? $f_object->get () : NULL);
 
 		if ((is_array ($f_object_array))&&(isset ($f_object_array['ddbdatalinker_type'])))
 		{
@@ -98,14 +89,14 @@ function &direct_datalinker_account_pms (&$f_object,$f_message_content = true)
 			case 2:
 			case 3:
 			{
-				if ($direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_box.php")) { $f_return = new direct_account_pms_box (); }
+				if (direct_autoload ('dNG\sWG\dhandler\directPMSBox')) { $f_return = new directPMSBox (); }
 				if (($f_return)&&(!$f_return->get ($f_object_array['ddbdatalinker_id']))) { $f_return = false; }
 				break 1;
 			}
 			case 4:
 			case 5:
 			{
-				if ($direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_message.php")) { $f_return = new direct_account_pms_message (); }
+				if (direct_autoload ('dNG\sWG\dhandler\directPMSMessage')) { $f_return = new directPMSMessage (); }
 				if (($f_return)&&(!$f_return->get ($f_object_array['ddbdatalinker_id'],$f_message_content))) { $f_return = false; }
 				break 1;
 			}

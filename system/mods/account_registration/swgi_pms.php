@@ -45,11 +45,15 @@ NOTE_END //n*/
 * @copyright  (C) direct Netware Group - All rights reserved
 * @package    sWG
 * @subpackage account
-* @uses       direct_product_iversion
 * @since      v0.1.00
 * @license    http://www.direct-netware.de/redirect.php?licenses;gpl
 *             GNU General Public License 2
 */
+
+/*#use(direct_use) */
+use dNG\sWG\dhandler\directPMSBox,
+    dNG\sWG\dhandler\directPMSMessage;
+/* #\n*/
 
 /* -------------------------------------------------------------------------
 All comments will be removed in the "production" packages (they will be in
@@ -66,86 +70,23 @@ if (!defined ("direct_product_iversion")) { exit (); }
 
 //j// Functions and classes
 
-//f// direct_mods_account_registration_pms_form ($f_data)
-/**
-* Modification function called by:
-* m = account
-* s = registration
-* a = form
-*
-* @param  array $f_data Array containing call specific data.
-* @uses   direct_basic_functions::inputfilter_number()
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
-* @return boolean Always true
-* @since  v0.1.00
-*/
-function direct_mods_account_registration_pms_form ($f_data)
-{
-	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_form (+f_data)- (#echo(__LINE__)#)"); }
-	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_form ()- (#echo(__LINE__)#)",:#*/true/*#ifdef(DEBUG):,true):#*/;
-}
-
-//f// direct_mods_account_registration_pms_form_check ($f_data)
-/**
-* Modification function called by:
-* m = account
-* s = registration
-* a = form
-*
-* @param  array $f_data Array containing call specific data.
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
-* @return boolean Always true
-* @since  v0.1.00
-*/
-function direct_mods_account_registration_pms_form_check ($f_data)
-{
-	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_form_check (+f_data)- (#echo(__LINE__)#)"); }
-	return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_form_check ()- (#echo(__LINE__)#)",:#*/true/*#ifdef(DEBUG):,true):#*/;
-}
-
-//f// direct_mods_account_registration_pms_form_save ($f_data)
-/**
-* Modification function called by:
-* m = account
-* s = profile
-* a = edit-save
-*
-* @param  array $f_data Array containing call specific data.
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
-* @return mixed Input based, edited validation array or NULL on error
-* @since  v0.1.00
-*/
-function direct_mods_account_registration_pms_form_save ($f_data)
-{
-	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_form_save (+f_data)- (#echo(__LINE__)#)"); }
-
-	if (isset ($f_data[1])) { return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_form_save ()- (#echo(__LINE__)#)",:#*/$f_data[1]/*#ifdef(DEBUG):,true):#*/; }
-	else { return /*#ifdef(DEBUG):direct_debug (7,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_form_save ()- (#echo(__LINE__)#)",:#*/NULL/*#ifdef(DEBUG):,true):#*/; }
-}
-
-//f// direct_mods_account_registration_pms_validation ($f_data)
 /**
 * Modification function called by:
 * m = validation
 * for account registration
 *
 * @param  array $f_data Array containing call specific data.
-* @uses   direct_debug()
-* @uses   USE_debug_reporting
 * @return boolean Always true
 * @since  v0.1.00
 */
 function direct_mods_account_registration_pms_validation ($f_data)
 {
-	global $direct_cachedata,$direct_classes,$direct_settings;
+	global $direct_cachedata,$direct_globals,$direct_settings;
 	if (USE_debug_reporting) { direct_debug (5,"sWG/#echo(__FILEPATH__)# -direct_mods_account_registration_pms_validation (+f_data)- (#echo(__LINE__)#)"); }
 
 	if (isset ($f_data[1]))
 	{
-		$f_continue_check = $direct_settings['account_mods_registration_pms'];
+		$f_continue_check = ($direct_globals['basic_functions']->settingsGet ($direct_settings['path_data']."/settings/swg_account_pms.php") ? $direct_settings['account_mods_profile_pms_via_email'] : false);
 		$f_return = $f_data[1];
 	}
 	else
@@ -154,13 +95,13 @@ function direct_mods_account_registration_pms_validation ($f_data)
 		$f_return = NULL;
 	}
 
-	if ($f_continue_check) { $f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_box.php"); }
-	if ($f_continue_check) { $f_continue_check = $direct_classes['basic_functions']->include_file ($direct_settings['path_system']."/classes/dhandler/swg_account_pms_message.php"); }
+	if ($f_continue_check) { $f_continue_check = direct_autoload ('dNG\sWG\dhandler\directPMSBox'); }
+	if ($f_continue_check) { $f_continue_check = direct_autoload ('dNG\sWG\dhandler\directPMSMessage'); }
 
 	if ($f_continue_check)
 	{
 		$f_box_id = uniqid ("");
-		$f_box_object = new direct_account_pms_box ();
+		$f_box_object = new directPMSBox ();
 
 		if ($f_box_object)
 		{
@@ -179,11 +120,11 @@ $f_insert_array = array (
 "ddbdatalinker_title" => ""
 );
 
-			$f_continue_check = $f_box_object->set_insert ($f_insert_array);
+			$f_continue_check = $f_box_object->setInsert ($f_insert_array);
 		}
 		else { $f_continue_check = false; }
 
-		$f_message_object = new direct_account_pms_message ();
+		$f_message_object = new directPMSMessage ();
 		if (!$f_message_object) { $f_continue_check = false; }
 
 		if ($f_continue_check)
@@ -211,7 +152,7 @@ $f_insert_array = array (
 "box" => "in"
 );
 
-			if (!$f_message_object->set_insert ($f_insert_array)) { $f_return = NULL; }
+			if (!$f_message_object->setInsert ($f_insert_array)) { $f_return = NULL; }
 		}
 	}
 
